@@ -36,8 +36,28 @@ const Navbar = () => {
             Home
           </li>
         </Link>
-        <li className="p-4 hover:text-[#00df9a] cursor-pointer">Lost item</li>
-        <li className="p-4 hover:text-[#00df9a] cursor-pointer">Found item</li>
+        <Link href="/lost-item">
+          <li
+            className={
+              currentPath === "/lost-item"
+                ? "p-4 text-[#00df9a]"
+                : "p-4 hover:text-[#00df9a] cursor-pointer"
+            }
+          >
+            Lost item
+          </li>
+        </Link>
+        <Link href="/found-item">
+          <li
+            className={
+              currentPath === "/found-item"
+                ? "p-4 text-[#00df9a]"
+                : "p-4 hover:text-[#00df9a] cursor-pointer"
+            }
+          >
+            Found item
+          </li>
+        </Link>
         <Link href="/dashboard">
           <li
             className={
@@ -49,10 +69,14 @@ const Navbar = () => {
             Dashboard
           </li>
         </Link>
-        <li className="p-4 hover:text-[#00df9a] cursor-pointer">Log in</li>
-        <li className="p-4 w-[90px] bg-[#00df9a] text-black font-semibold rounded-[25px] hover:bg-[#00c987] transition-all duration-300 cursor-pointer">
-          Sign up
-        </li>
+        <Link href="/log-in">
+          <li className="p-4 hover:text-[#00df9a] cursor-pointer">Log in</li>
+        </Link>
+        <Link href="/sign-up">
+          <li className="p-4 w-[90px] bg-[#00df9a] text-black font-semibold rounded-[25px] hover:bg-[#00c987] transition-all duration-300 cursor-pointer">
+            Sign up
+          </li>
+        </Link>
       </ul>
 
       {/* Mobile Menu Button */}
@@ -71,30 +95,60 @@ const Navbar = () => {
         <h1 className="w-full text-3xl font-bold text-[#00df9a] m-4">
           Findyfy
         </h1>
-        <li className="p-4 border-b border-gray-600 hover:text-[#00df9a] cursor-pointer">
-          Home
-        </li>
-        <li className="p-4 border-b border-gray-600 hover:text-[#00df9a] cursor-pointer">
-          Lost item
-        </li>
-        <li className="p-4 border-b border-gray-600 hover:text-[#00df9a] cursor-pointer">
-          Found item
-        </li>
-        <li
-          className={
-            currentPath === "/dashboard"
-              ? "p-4 border-b border-gray-600 text-[#00df9a]"
-              : "p-4 border-b border-gray-600 hover:text-[#00df9a] cursor-pointer"
-          }
-        >
-          Dashboard
-        </li>
-        <li className="p-4 border-b border-gray-600 hover:text-[#00df9a] cursor-pointer">
-          Log in
-        </li>
-        <li className="p-4 w-[90px]  bg-[#00df9a] text-black font-semibold rounded-[20px] hover:bg-[#00c987] transition-all duration-300 cursor-pointer">
-          Sign up
-        </li>
+        <Link href="/">
+          <li
+            className={
+              currentPath === "/"
+                ? "p-4 border-b border-gray-600 text-[#00df9a] cursor-pointer"
+                : "p-4 border-b border-gray-600 hover:text-[#00df9a] cursor-pointer"
+            }
+          >
+            Home
+          </li>
+        </Link>
+        <Link href="/lost-item">
+          <li
+            className={
+              currentPath === "/lost-item"
+                ? "p-4 text-[#00df9a] border-b border-gray-600"
+                : "p-4 border-b border-gray-600 hover:text-[#00df9a] cursor-pointer"
+            }
+          >
+            Lost item
+          </li>
+        </Link>
+        <Link href="/found-item">
+          <li
+            className={
+              currentPath === "/found-item"
+                ? "p-4 text-[#00df9a] border-b border-gray-600"
+                : "p-4 border-b border-gray-600 hover:text-[#00df9a] cursor-pointer"
+            }
+          >
+            Found item
+          </li>
+        </Link>
+        <Link href="/dashboard">
+          <li
+            className={
+              currentPath === "/dashboard"
+                ? "p-4 border-b border-gray-600 text-[#00df9a]"
+                : "p-4 border-b border-gray-600 hover:text-[#00df9a] cursor-pointer"
+            }
+          >
+            Dashboard
+          </li>
+        </Link>
+        <Link href="/log-in">
+          <li className="p-4 border-b border-gray-600 hover:text-[#00df9a] cursor-pointer">
+            Log in
+          </li>
+        </Link>
+        <Link href="/sign-up">
+          <li className="p-4 w-[90px]  bg-[#00df9a] text-black font-semibold rounded-[20px] hover:bg-[#00c987] transition-all duration-300 cursor-pointer">
+            Sign up
+          </li>
+        </Link>
       </ul>
     </div>
   );

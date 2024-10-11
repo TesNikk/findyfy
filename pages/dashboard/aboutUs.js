@@ -1,5 +1,5 @@
 import RootLayout from "@/components/wrapper";
-import About from "@/components/about";
+import About from "@/components/About";
 export default function AboutUsPage() {
   return (
     <RootLayout>
