@@ -1,10 +1,10 @@
 import RootLayout from "@/components/wrapper";
-import UserDashboard from "@/components/UserDashboard";
-export default function Bal() {
+import Help from "@/components/Help";
+export default function HelpPage() {
   return (
     <RootLayout>
       <div>
-        <UserDashboard />;
+        <Help />;
       </div>
     </RootLayout>
   );

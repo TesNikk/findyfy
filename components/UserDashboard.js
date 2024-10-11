@@ -1,4 +1,6 @@
+import Link from "next/link";
 import React from "react";
+
 const UserDashboard = () => {
   return (
     <div className="bg-slate-100 py-10 px-4 min-h-screen">
@@ -15,39 +17,62 @@ const UserDashboard = () => {
           {/* Left Sidebar - Dashboard Menu */}
           <div className="bg-white shadow-lg rounded-lg p-6 lg:w-1/4 h-full flex flex-col">
             <h2 className="text-lg font-semibold mb-4">Dashboard</h2>
-            <div className="space-y-5 flex-grow">
-              <button className="w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
-                <span>Your Profile</span>
-                <span>➔</span>
-              </button>
-              <button className="w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
-                <span>Settings</span>
-                <span>➔</span>
-              </button>
-              <button className="w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
-                <span>Chats</span>
-                <span>➔</span>
-              </button>
-              <button className="w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
-                <span>Update Items</span>
-                <span>➔</span>
-              </button>
-              <button className="w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
-                <span>Help</span>
-                <span>➔</span>
-              </button>
-              <button className="w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
-                <span>About Us</span>
-                <span>➔</span>
-              </button>
-              <button className="w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
-                <span>Questions</span>
-                <span>➔</span>
-              </button>
-              <button className="w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100  transition-all duration-200">
-                <span>Log Out</span>
-                <span>➔</span>
-              </button>
+            <div className="flex-grow">
+              <Link href="/dashboard/profile">
+                <button className="mb-3 w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                  <span>Your Profile</span>
+                  <span>➔</span>
+                </button>
+              </Link>
+
+              <Link href="/dashboard/settings">
+                <button className="mb-3 w-full bg-gray-200 text-gray-700 p-3  rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                  <span>Settings</span>
+                  <span>➔</span>
+                </button>
+              </Link>
+
+              <Link href="/dashboard/chats">
+                <button className="mb-3 w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                  <span>Chats</span>
+                  <span>➔</span>
+                </button>
+              </Link>
+
+              <Link href="/dashboard/update">
+                <button className="mb-3 w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                  <span>Update Items</span>
+                  <span>➔</span>
+                </button>
+              </Link>
+
+              <Link href="/dashboard/help">
+                <button className="mb-3 w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                  <span>Help</span>
+                  <span>➔</span>
+                </button>
+              </Link>
+
+              <Link href="/dashboard/aboutUs">
+                <button className="mb-3 w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                  <span>About Us</span>
+                  <span>➔</span>
+                </button>
+              </Link>
+
+              <Link href="/dashboard/questions">
+                <button className="mb-3 w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                  <span>Questions</span>
+                  <span>➔</span>
+                </button>
+              </Link>
+
+              <Link href="/dashboard/logOut">
+                <button className="w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                  <span>Log Out</span>
+                  <span>➔</span>
+                </button>
+              </Link>
             </div>
           </div>
 
