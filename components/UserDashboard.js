@@ -3,7 +3,7 @@ import React from "react";
 
 const UserDashboard = () => {
   return (
-    <div className="bg-slate-100 py-10 px-4 min-h-screen">
+    <div className="bg-red-50 py-10 px-4 min-h-screen">
       <div className="container mx-auto">
         {/* Dashboard Header */}
         <h1 className="text-4xl font-bold text-center mb-4">User Dashboard</h1>

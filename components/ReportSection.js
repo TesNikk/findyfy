@@ -40,7 +40,7 @@ const ReportSection = () => {
             You can easily report for your lost and found items now. It helps
             reunite lost items with their owners.
           </p>
-          <button className="bg-blue-500 text-white p-2 px-4 rounded-md font-medium  hover:bg-blue-600 transition duration-300">
+          <button className="bg-red-500 text-white p-2 px-4 rounded-md font-medium  hover:bg-red-600 transition duration-300">
             Report item →
           </button>
         </div>
@@ -50,7 +50,7 @@ const ReportSection = () => {
           {/* Lost Item Form */}
           <div
             onClick={() => setActiveForm("lost")}
-            className={`absolute top-0 right-0 w-[300px] h-[510px] bg-blue-50 p-4 rounded-xl shadow-2xl transition-transform duration-300 cursor-pointer transform ${
+            className={`absolute top-0 right-0 w-[300px] h-[510px] bg-red-100 p-4 rounded-xl shadow-2xl transition-transform duration-300 cursor-pointer transform ${
               activeForm === "lost"
                 ? "z-10"
                 : "z-0 translate-x-[-65%] translate-y-[20px]"
@@ -139,7 +139,7 @@ const ReportSection = () => {
               />
             </div>
 
-            <button className="w-full bg-blue-500 text-white p-1 rounded-md font-medium mt-2 text-sm  hover:bg-blue-600 transition duration-300">
+            <button className="w-full bg-red-500 text-white p-1 rounded-md font-medium mt-2 text-sm  hover:bg-red-600 transition duration-300">
               Submit
             </button>
           </div>
@@ -147,7 +147,7 @@ const ReportSection = () => {
           {/* Found Item Form */}
           <div
             onClick={() => setActiveForm("found")}
-            className={`absolute top-0 right-0 w-[300px] h-[450px] bg-blue-50 p-4 rounded-xl shadow-2xl transition-transform duration-300 cursor-pointer transform ${
+            className={`absolute top-0 right-0 w-[300px] h-[450px] bg-red-100 p-4 rounded-xl shadow-2xl transition-transform duration-300 cursor-pointer transform ${
               activeForm === "found"
                 ? "z-10"
                 : "z-0 translate-x-[-65%] translate-y-[80px]"
@@ -224,7 +224,7 @@ const ReportSection = () => {
               />
             </div>
 
-            <button className="w-full bg-blue-500 text-white p-1 rounded-md font-medium mt-2 text-sm  hover:bg-blue-600 transition duration-300">
+            <button className="w-full bg-red-500 text-white p-1 rounded-md font-medium mt-2 text-sm  hover:bg-red-600 transition duration-300">
               Submit
             </button>
           </div>
