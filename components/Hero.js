@@ -1,4 +1,5 @@
 "use client";
+import Link from 'next/link';
 import React from 'react';
 import { ReactTyped } from "react-typed";
 
@@ -25,7 +26,7 @@ const Hero = () => {
           />
         </div>
         <p className='md:text-2xl text-xl font-bold text-gray-500'>Report lost or found items to help reunite people with their belongings</p>
-        <button className='bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black hover:bg-[#00c987] transition-all duration-300 cursor-pointer'>Get Started</button>
+        <Link href="/sign-up"><button className='bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black hover:bg-[#00c987] transition-all duration-300 cursor-pointer'>Get Started</button></Link> 
       </div>
     </div>
   );
