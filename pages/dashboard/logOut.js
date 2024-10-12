@@ -1,5 +1,5 @@
 import RootLayout from "@/components/wrapper";
-import LoggedOut from "@/components/LoggedOut";
+import LoggedOut from "@/components/auth/LoggedOut";
 export default function LogOutPage() {
   return (
     <RootLayout>
