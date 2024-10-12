@@ -7,6 +7,7 @@ const FoundItem = () => {
     date: "",
     mobile: "",
     photo: null,
+    location: "",
   });
 
   const handleSubmit = (e) => {
@@ -15,8 +16,8 @@ const FoundItem = () => {
   };
 
   return (
-    <div className="bg-red-50 flex py-3">
-    <div className="bg-red-100 p-6 rounded-lg shadow-md max-w-md mx-auto">
+    <div className="bg-red-100 flex py-3">
+    <div className="bg-red-200 p-6 rounded-lg shadow-md max-w-md mx-auto">
       <h2 className="text-lg font-bold text-gray-700 mb-4">Report Found Item</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -39,7 +40,18 @@ const FoundItem = () => {
             placeholder="Item description"
           />
         </div>
-
+        <div className="mb-2">
+              <label className="block text-gray-700 text-sm">Location</label>
+              <input
+                type="text"
+                value={foundItem.location}
+                onChange={(e) =>
+                  setLostItem({ ...foundItemItem, location: e.target.value })
+                }
+                className="w-full p-1 mt-1 border rounded-md text-sm"
+                placeholder="Location"
+              />
+            </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm">Date & Time</label>
           <input

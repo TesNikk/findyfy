@@ -16,8 +16,8 @@ const LostItem = () => {
   };
 
   return (
-    <div className="bg-red-50 flex py-3">
-    <div className="bg-red-100 p-6 rounded-lg shadow-md max-w-md mx-auto">
+    <div className="bg-red-100 flex py-3">
+    <div className="bg-red-200 p-6 rounded-lg shadow-md max-w-md mx-auto">
       <h2 className="text-lg font-bold text-gray-700 mb-4">Report Lost Item</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">

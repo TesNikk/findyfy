@@ -3,7 +3,7 @@ import React from "react";
 
 const UserDashboard = () => {
   return (
-    <div className="bg-red-50 py-10 px-4 min-h-screen">
+    <div className="bg-red-100 py-10 px-4 min-h-screen">
       <div className="container mx-auto">
         {/* Dashboard Header */}
         <h1 className="text-4xl font-bold text-center mb-4">User Dashboard</h1>
@@ -15,60 +15,60 @@ const UserDashboard = () => {
         {/* Dashboard Content */}
         <div className="flex flex-col lg:flex-row gap-6 h-full">
           {/* Left Sidebar - Dashboard Menu */}
-          <div className="bg-white shadow-lg rounded-lg p-6 lg:w-1/4 h-full flex flex-col">
+          <div className="bg-red-200 shadow-lg rounded-lg p-6 lg:w-1/4 h-full flex flex-col">
             <h2 className="text-lg font-semibold mb-4">Dashboard</h2>
             <div className="flex-grow">
               <Link href="/dashboard/profile">
-                <button className="mb-3 w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                <button className="mb-3 w-full bg-red-300 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
                   <span>Your Profile</span>
                   <span>➔</span>
                 </button>
               </Link>
 
               <Link href="/dashboard/settings">
-                <button className="mb-3 w-full bg-gray-200 text-gray-700 p-3  rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                <button className="mb-3 w-full bg-red-300  p-3  rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
                   <span>Settings</span>
                   <span>➔</span>
                 </button>
               </Link>
 
               <Link href="/dashboard/chats">
-                <button className="mb-3 w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                <button className="mb-3 w-full bg-red-300 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
                   <span>Chats</span>
                   <span>➔</span>
                 </button>
               </Link>
 
               <Link href="/dashboard/update">
-                <button className="mb-3 w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                <button className="mb-3 w-full bg-red-300 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
                   <span>Update Items</span>
                   <span>➔</span>
                 </button>
               </Link>
 
               <Link href="/dashboard/help">
-                <button className="mb-3 w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                <button className="mb-3 w-full bg-red-300  p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
                   <span>Help</span>
                   <span>➔</span>
                 </button>
               </Link>
 
               <Link href="/dashboard/aboutUs">
-                <button className="mb-3 w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                <button className="mb-3 w-full bg-red-300  p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
                   <span>About Us</span>
                   <span>➔</span>
                 </button>
               </Link>
 
               <Link href="/dashboard/questions">
-                <button className="mb-3 w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                <button className="mb-3 w-full bg-red-300  p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
                   <span>Questions</span>
                   <span>➔</span>
                 </button>
               </Link>
 
               <Link href="/dashboard/logOut">
-                <button className="w-full bg-gray-200 text-gray-700 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-gray-700 hover:text-gray-100 transition-all duration-200">
+                <button className="w-full bg-red-300  p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
                   <span>Log Out</span>
                   <span>➔</span>
                 </button>
@@ -77,7 +77,7 @@ const UserDashboard = () => {
           </div>
 
           {/* Right Content - Lost/Found Items */}
-          <div className="bg-white shadow-lg rounded-lg p-6 flex-1 flex flex-col h-full">
+          <div className="bg-red-200 shadow-lg rounded-lg p-6 flex-1 flex flex-col h-full">
             {/* Lost and Found Items Container */}
             <div className="flex flex-col justify-between h-full">
               {/* Lost Items */}
@@ -86,7 +86,7 @@ const UserDashboard = () => {
                   Lost Items Reported
                 </h3>
                 <div className="grid grid-cols-3 gap-4 h-full font-semibold">
-                  <div className="bg-gray-100 rounded-lg p-4 flex flex-col items-center hover:bg-gray-200 hover:shadow-lg transition-all duration-200">
+                  <div className="bg-red-300 rounded-lg p-4 flex flex-col items-center hover:bg-red-500 hover:shadow-lg transition-all duration-200">
                     <img
                       src="/assets/image/watch.png"
                       alt="Watch"
@@ -94,7 +94,7 @@ const UserDashboard = () => {
                     />
                     <span>Watch</span>
                   </div>
-                  <div className="bg-gray-100 rounded-lg p-4 flex flex-col items-center hover:bg-gray-200 hover:shadow-lg transition-all duration-200">
+                  <div className="bg-red-300 rounded-lg p-4 flex flex-col items-center hover:bg-red-500 hover:shadow-lg transition-all duration-200">
                     <img
                       src="/assets/image/wallet.png"
                       alt="Wallet"
@@ -102,9 +102,14 @@ const UserDashboard = () => {
                     />
                     <span>Wallet</span>
                   </div>
-                  <button className="bg-gray-100 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-200 hover:shadow-lg transition-all duration-200">
-                    <span className="text-4xl font-bold">+</span>
-                  </button>
+                  <Link
+                    href="/lost-item"
+                    className="bg-red-300 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-red-500 hover:shadow-lg transition-all duration-200"
+                  >
+                    <button>
+                      <span className="text-4xl font-bold">+</span>
+                    </button>
+                  </Link>
                 </div>
               </div>
 
@@ -114,7 +119,7 @@ const UserDashboard = () => {
                   Found Items Reported
                 </h3>
                 <div className="grid grid-cols-3 gap-4 h-full font-semibold">
-                  <div className="bg-gray-100 rounded-lg p-4 flex flex-col items-center hover:bg-gray-200 hover:shadow-lg transition-all duration-200">
+                  <div className="bg-red-300 rounded-lg p-4 flex flex-col items-center hover:bg-red-500 hover:shadow-lg transition-all duration-200">
                     <img
                       src="/assets/image/jewellery.png"
                       alt="Jewelry"
@@ -122,7 +127,7 @@ const UserDashboard = () => {
                     />
                     <span>Jewelry</span>
                   </div>
-                  <div className="bg-gray-100 rounded-lg p-4 flex flex-col items-center hover:bg-gray-200 hover:shadow-lg transition-all duration-200">
+                  <div className="bg-red-300 rounded-lg p-4 flex flex-col items-center hover:bg-red-500 hover:shadow-lg transition-all duration-200">
                     <img
                       src="/assets/image/purse.png"
                       alt="Bag"
@@ -130,9 +135,14 @@ const UserDashboard = () => {
                     />
                     <span>Bag</span>
                   </div>
-                  <button className="bg-gray-100 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-200 hover:shadow-lg transition-all duration-200">
-                    <span className="text-4xl font-bold">+</span>
-                  </button>
+                  <Link
+                    href="/found-item"
+                    className="bg-red-300 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-red-500 hover:shadow-lg transition-all duration-200"
+                  >
+                    <button>
+                      <span className="text-4xl font-bold">+</span>
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
