@@ -1,5 +1,5 @@
 import RootLayout from "@/components/wrapper";
-import Help from "@/components/Help";
+import Help from "@/components/dashboardComponents/Help";
 export default function HelpPage() {
   return (
     <RootLayout>

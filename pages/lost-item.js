@@ -1,5 +1,5 @@
 import RootLayout from "@/components/wrapper";
-import LostItem from "@/components/LostItem";
+import LostItem from "@/components/ReportComponents/LostItem";
 export default function LostItemPage() {
   return (
     <RootLayout>
