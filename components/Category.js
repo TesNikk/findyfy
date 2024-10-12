@@ -47,7 +47,7 @@ const CategorySection = () => {
           ))}
         </div>
 
-        <button className="mt-8 bg-blue-500 text-white px-6 py-3 rounded-md font-medium hover:bg-blue-600 transition duration-300">
+        <button className="mt-8 bg-red-500 text-white px-6 py-3 rounded-md font-medium hover:bg-red-600 transition duration-300">
           View All Items →
         </button>
       </div>
