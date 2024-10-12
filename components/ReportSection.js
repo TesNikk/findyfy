@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { useState } from "react";
 
 const ReportSection = () => {
@@ -18,12 +19,13 @@ const ReportSection = () => {
     date: "",
     mobile: "",
     photo: null,
+    location: "",
   });
 
   const [activeForm, setActiveForm] = useState("lost"); // Manage which form is on top
 
   return (
-    <div className="w-full py-16 px-4 bg-red-50 relative">
+    <div className="w-full py-24 px-4 bg-red-50 relative">
       <div className="max-w-[1240px] mx-auto flex flex-col md:flex-row relative">
         <div className="md:w-1/2 flex flex-col justify-center items-start">
           {/* Rounded Image */}
@@ -40,13 +42,15 @@ const ReportSection = () => {
             You can easily report for your lost and found items now. It helps
             reunite lost items with their owners.
           </p>
+          <Link href="/report-item">
           <button className="bg-red-500 text-white p-2 px-4 rounded-md font-medium  hover:bg-red-600 transition duration-300">
             Report item →
           </button>
+          </Link>
         </div>
 
         {/* Right Side: Overlapping Forms */}
-        <div className="md:w-1/2 relative h-[500px] flex justify-center items-center">
+        <div className="md:w-1/2 relative h-[550px] flex justify-center items-center">
           {/* Lost Item Form */}
           <div
             onClick={() => setActiveForm("lost")}
@@ -147,7 +151,7 @@ const ReportSection = () => {
           {/* Found Item Form */}
           <div
             onClick={() => setActiveForm("found")}
-            className={`absolute top-0 right-0 w-[300px] h-[450px] bg-red-100 p-4 rounded-xl shadow-2xl transition-transform duration-300 cursor-pointer transform ${
+            className={`absolute top-0 right-0 w-[300px] h-[510px] bg-red-100 p-4 rounded-xl shadow-2xl transition-transform duration-300 cursor-pointer transform ${
               activeForm === "found"
                 ? "z-10"
                 : "z-0 translate-x-[-65%] translate-y-[80px]"
@@ -183,7 +187,18 @@ const ReportSection = () => {
                 placeholder="Item description"
               />
             </div>
-
+            <div className="mb-2">
+              <label className="block text-gray-700 text-sm">Location</label>
+              <input
+                type="text"
+                value={foundItem.location}
+                onChange={(e) =>
+                  setLostItem({ ...foundItem, location: e.target.value })
+                }
+                className="w-full p-1 mt-1 border rounded-md text-sm"
+                placeholder="Location"
+              />
+            </div>
             <div className="mb-2">
               <label className="block text-gray-700 text-sm">Date & Time</label>
               <input

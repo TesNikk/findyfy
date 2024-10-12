@@ -11,8 +11,8 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-red-50">
-      <div className="bg-red-100 shadow-lg rounded-lg p-8 max-w-md w-full">
+    <div className="flex items-center justify-center min-h-screen bg-red-100">
+      <div className="bg-red-200 shadow-lg rounded-lg p-8 max-w-md w-full">
         <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
         <form onSubmit={handleSignUp} className="space-y-4">
           <div>
@@ -51,7 +51,7 @@ const SignUp = () => {
 
           <button
             type="submit"
-            className="w-full bg-red-400 text-white py-2 px-4 rounded-md hover:bg-red-500 transition-colors"
+            className="w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-colors"
           >
             Sign Up
           </button>

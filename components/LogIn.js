@@ -12,8 +12,8 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-red-50">
-      <div className="bg-red-100 p-8 rounded-lg shadow-lg w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen bg-red-100">
+      <div className="bg-red-200 p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-6">Log in</h2>
         <form onSubmit={handleLogin}>
           {/* Email Field */}
@@ -57,7 +57,7 @@ const Login = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-red-400 text-white p-3 rounded-lg hover:bg-red-500 transition duration-300"
+            className="w-full bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition duration-300"
           >
             Log in
           </button>
@@ -66,7 +66,7 @@ const Login = () => {
         <div className="mt-4 text-center">
           <p className="text-gray-600">
             Don't have an account?{" "}
-            <Link href="/sign-up" className="text-red-600">
+            <Link href="/sign-up" className="text-red-700">
               Sign Up
             </Link>
           </p>

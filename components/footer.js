@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -37,24 +38,24 @@ const Footer = () => {
           <h3 className="text-lg font-bold mb-4 text-[#00df9a]">Connections</h3>
           <ul className="space-y-2 text-gray-300">
             <li>
-              <a href="#" className="hover:text-white">
+              <Link href="/" className="hover:text-white">
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="hover:text-white">
+              <Link href="/lost-item" className="hover:text-white">
                 Submit Lost Item
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="hover:text-white">
+              <Link href="found-item" className="hover:text-white">
                 Submit Found Item
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="hover:text-white">
+              <Link href="/aboutUs" className="hover:text-white">
                 About
-              </a>
+              </Link>
             </li>
             <li>
               <a href="#" className="hover:text-white">
