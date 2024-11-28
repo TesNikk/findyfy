@@ -1,15 +1,37 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { usePathname } from "next/navigation";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/config/firebaseConfig";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const currentPath = usePathname();
   const [nav, setNav] = useState(false);
+  const [user, loading] = useAuthState(auth); // Get loading state
+  const router = useRouter();
+
+  useEffect(() => {
+    // Only run redirection logic if not loading
+    if (!user) {
+      router.push("/log-in");
+    }
+  }, [user, router]);
 
   const handleNav = () => {
     setNav(!nav);
   };
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      router.push("/log-in");
+    } catch (error) {
+      console.error("Logout Error: ", error.message);
+    }
+  };
+
 
   return (
     <div className="w-full top-0 z-50 shadow-xl">
@@ -70,9 +92,21 @@ const Navbar = () => {
               Dashboard
             </li>
           </Link>
-          <Link href="/log-in">
-            <li className="p-4 hover:text-[#00df9a] cursor-pointer">Log in</li>
-          </Link>
+          {user ? (
+            <li
+              onClick={handleLogout}
+              className="p-4 hover:text-[#00df9a] cursor-pointer"
+            >
+              Log out
+            </li>
+          ) : (
+            <Link href="/log-in">
+              <li className="p-4 hover:text-[#00df9a] cursor-pointer">
+                Log in
+              </li>
+            </Link>
+          )}
+
           <Link href="/sign-up">
             <li className="p-4 w-[90px] bg-[#00df9a] text-black font-semibold rounded-[25px] hover:bg-[#00c987] transition-all duration-300 cursor-pointer">
               Sign up
@@ -140,11 +174,20 @@ const Navbar = () => {
               Dashboard
             </li>
           </Link>
-          <Link href="/log-in">
-            <li className="p-4 border-b border-gray-600 hover:text-[#00df9a] cursor-pointer">
-              Log in
+          {user ? (
+            <li
+              onClick={handleLogout}
+              className="p-4 hover:text-[#00df9a] cursor-pointer"
+            >
+              Log out
             </li>
-          </Link>
+          ) : (
+            <Link href="/log-in">
+              <li className="p-4 border-b border-gray-600 hover:text-[#00df9a] cursor-pointer">
+                Log in
+              </li>
+            </Link>
+          )}
           <Link href="/sign-up">
             <li className="p-4 w-[90px]  bg-[#00df9a] text-black font-semibold rounded-[20px] hover:bg-[#00c987] transition-all duration-300 cursor-pointer">
               Sign up

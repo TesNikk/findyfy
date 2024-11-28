@@ -1,15 +1,33 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "@/config/firebaseConfig";
+import { useRouter } from "next/router";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth);
+  const router = useRouter();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Handle login logic here (e.g., form submission, validation)
-    console.log("Email:", email, "Password:", password);
+    try {
+      await signInWithEmailAndPassword(email, password);
+    } catch (err) {
+      console.error("Login Error:", err.message);
+    }
   };
+
+  useEffect(() => {
+    if (user) {
+      console.log("Logged in user:", user);
+      setEmail("");
+      setPassword("");
+      router.push("/"); // Redirect to home page
+    }
+  }, [user, router]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-red-100">
@@ -59,9 +77,14 @@ const Login = () => {
             type="submit"
             className="w-full bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition duration-300"
           >
-            Log in
+            {loading ? "Logging in..." : "Log in"}
           </button>
         </form>
+
+        {/* Error Message */}
+        {error && (
+          <p className="text-red-600 mt-4 text-center">{error.message}</p>
+        )}
 
         <div className="mt-4 text-center">
           <p className="text-gray-600">
