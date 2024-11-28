@@ -15,6 +15,7 @@ const Login = () => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(email, password);
+      sessionStorage.setItem("user", true);
     } catch (err) {
       console.error("Login Error:", err.message);
     }

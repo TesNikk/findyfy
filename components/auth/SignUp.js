@@ -17,6 +17,7 @@ const SignUp = () => {
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(email, password);
+      sessionStorage.setItem("user", true);
     } catch (err) {
       console.error("Sign-Up Error:", err.message);
     }
