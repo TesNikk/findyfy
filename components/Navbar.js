@@ -1,15 +1,52 @@
-import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { usePathname } from "next/navigation";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/config/firebaseConfig";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Navbar = () => {
   const currentPath = usePathname();
   const [nav, setNav] = useState(false);
+  const [user, loading] = useAuthState(auth);
+  const router = useRouter();
+  const [userSession, setUserSession] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const session = sessionStorage.getItem("user");
+      setUserSession(session);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!loading && !user && !userSession) {
+      router.push("/log-in");
+    }
+  }, [user, loading, userSession, router]);
 
   const handleNav = () => {
     setNav(!nav);
   };
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      sessionStorage.removeItem("user");
+      router.push("/log-in");
+    } catch (error) {
+      console.error("Logout Error: ", error.message);
+    }
+  };
+
+  if (loading) {
+    return null; 
+  }
+
+  if (!user && !userSession) {
+    return null; 
+  }
 
   return (
     <div className="w-full top-0 z-50 shadow-xl">
@@ -23,7 +60,6 @@ const Navbar = () => {
           />
           <h1 className="text-3xl font-bold text-[#00df9a]">Findyfy</h1>
         </div>
-
         {/* Navigation Menu */}
         <ul className="hidden md:flex">
           <Link href="/">
@@ -70,21 +106,30 @@ const Navbar = () => {
               Dashboard
             </li>
           </Link>
-          <Link href="/log-in">
-            <li className="p-4 hover:text-[#00df9a] cursor-pointer">Log in</li>
-          </Link>
+          {user ? (
+            <li
+              onClick={handleLogout}
+              className="p-4 hover:text-[#00df9a] cursor-pointer"
+            >
+              Log out
+            </li>
+          ) : (
+            <Link href="/log-in">
+              <li className="p-4 hover:text-[#00df9a] cursor-pointer">
+                Log in
+              </li>
+            </Link>
+          )}
           <Link href="/sign-up">
             <li className="p-4 w-[90px] bg-[#00df9a] text-black font-semibold rounded-[25px] hover:bg-[#00c987] transition-all duration-300 cursor-pointer">
               Sign up
             </li>
           </Link>
         </ul>
-
         {/* Mobile Menu Button */}
         <div onClick={handleNav} className="block md:hidden">
           {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
         </div>
-
         {/* Mobile Menu */}
         <ul
           className={
@@ -146,7 +191,7 @@ const Navbar = () => {
             </li>
           </Link>
           <Link href="/sign-up">
-            <li className="p-4 w-[90px]  bg-[#00df9a] text-black font-semibold rounded-[20px] hover:bg-[#00c987] transition-all duration-300 cursor-pointer">
+            <li className="p-4 w-[90px] bg-[#00df9a] text-black font-semibold rounded-[25px] hover:bg-[#00c987] transition-all duration-300 cursor-pointer">
               Sign up
             </li>
           </Link>

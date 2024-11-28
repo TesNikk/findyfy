@@ -1,24 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "@/config/firebaseConfig";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignUp = (e) => {
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
+
+  const router = useRouter();
+
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    // Handle sign-up logic here
-    console.log("Sign Up with:", { email, password });
+    try {
+      await createUserWithEmailAndPassword(email, password);
+      sessionStorage.setItem("user", true);
+    } catch (err) {
+      console.error("Sign-Up Error:", err.message);
+    }
   };
+
+  useEffect(() => {
+    if (user) {
+      console.log("User created successfully:", user);
+      router.push("/"); // Redirect to home page
+    }
+  }, [user, router]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-red-100">
       <div className="bg-red-200 shadow-lg rounded-lg p-8 max-w-md w-full">
         <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
-        <form onSubmit={handleSignUp} className="space-y-4">
-          <div>
+        <form onSubmit={handleSignUp}>
+          <div className="mb-4">
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-gray-700 font-semibold mb-2"
             >
               Email
             </label>
@@ -26,36 +46,52 @@ const SignUp = () => {
               type="email"
               id="email"
               value={email}
+              placeholder="Enter your email"
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
+              className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
               required
             />
           </div>
 
-          <div>
+          <div className="mb-6">
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-gray-700 font-semibold mb-2"
             >
               Password
             </label>
             <input
               type="password"
               id="password"
+              placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
               required
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-colors"
+            className="w-full bg-red-500 text-white p-3 rounded-md hover:bg-red-600 transition-colors"
+            disabled={loading}
           >
-            Sign Up
+            {loading ? "Signing Up..." : "Sign Up"}
           </button>
         </form>
+
+        {/* Error Message */}
+        {error && (
+          <p className="mt-4 text-center text-red-600">{error.message}</p>
+        )}
+        <div className="mt-4 text-center">
+          <p className="text-gray-600">
+            Already have an account?{" "}
+            <Link href="/log-in" className="text-red-700">
+              Log in
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
