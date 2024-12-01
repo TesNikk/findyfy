@@ -3,6 +3,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/config/firebaseConfig"; // Ensure you have these configured properly
 import { useAuthState } from "react-firebase-hooks/auth";
 
+
 const Profile = () => {
   const [user] = useAuthState(auth); // Get the logged-in user
   const [profileData, setProfileData] = useState({
