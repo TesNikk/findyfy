@@ -101,7 +101,9 @@ const Items = () => {
                   <p className="text-gray-600">
                     Reported by:{" "}
                     <Link
-                      href={`/dashboard/chats?username=${item.username}`}
+                      href={`/dashboard/chats/${
+                        item.userName ? item.userName : "Unknown"
+                      }`}
                       className="text-blue-500 hover:underline"
                     >
                       {item.userName ? item.userName : "Unknown"}
@@ -144,7 +146,9 @@ const Items = () => {
                   <p className="text-gray-600">
                     Reported by:{" "}
                     <Link
-                      href={`/dashboard/chats?username=${item.username}`}
+                      href={`/dashboard/chats/${
+                        item.userName ? item.userName : "Unknown"
+                      }`}
                       className="text-blue-500 hover:underline"
                     >
                       {item.userName ? item.userName : "Unknown"}
