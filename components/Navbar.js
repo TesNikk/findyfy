@@ -5,14 +5,25 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/config/firebaseConfig";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { onAuthStateChanged } from "firebase/auth";
+import { useUserStore } from "@/store/userStore";
 
 const Navbar = () => {
+  const { currentUser, isLoading, fetchUserInfo } = useUserStore();
   const currentPath = usePathname();
   const [nav, setNav] = useState(false);
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
   const [userSession, setUserSession] = useState(null);
-
+  useEffect(() => {
+    const unSub = onAuthStateChanged(auth, (user) => {
+      fetchUserInfo(user?.uid);
+      console.log("User: ", user.uid);
+    });
+    return () => {
+      unSub();
+    };
+  }, [fetchUserInfo]);
   useEffect(() => {
     if (typeof window !== "undefined") {
       const session = sessionStorage.getItem("user");
@@ -41,11 +52,11 @@ const Navbar = () => {
   };
 
   if (loading) {
-    return null; 
+    return null;
   }
 
   if (!user && !userSession) {
-    return null; 
+    return null;
   }
 
   return (
