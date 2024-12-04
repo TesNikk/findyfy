@@ -1,7 +1,18 @@
+import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import { db } from "@/config/firebaseConfig"; // Ensure Firebase is configured
-import { collection, query, getDocs } from "firebase/firestore";
-import Link from "next/link";
+import {
+  collection,
+  query,
+  getDocs,
+  doc,
+  setDoc,
+  serverTimestamp,
+  updateDoc,
+  arrayUnion,
+  getDoc,
+} from "firebase/firestore";
+import { useUserStore } from "@/store/userStore";
 
 const Items = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -9,6 +20,62 @@ const Items = () => {
   const [foundItems, setFoundItems] = useState([]);
   const [filteredLostItems, setFilteredLostItems] = useState([]);
   const [filteredFoundItems, setFilteredFoundItems] = useState([]);
+  const { currentUser } = useUserStore();
+  const router = useRouter();
+  const handleAddToChat = async (userId, userName) => {
+    // if (!userName || userName === "Unknown") {
+    //   console.warn("Cannot add an unknown user to the chat.");
+    //   return;
+    // }
+    const chatRef = collection(db, "chats");
+    const userChatsRef = collection(db, "userChats");
+
+    try {
+      const newChatRef = doc(chatRef);
+
+      await setDoc(newChatRef, {
+        createdAt: serverTimestamp(),
+        messages: [],
+        //participants: [userName], // Save the username of the reported user
+      });
+      const userChatDocRef = doc(userChatsRef, userId);
+      const currentUserChatDocRef = doc(userChatsRef, currentUser.id);
+
+      // Check if the user chat document exists, if not create it
+      const userChatDocSnap = await getDoc(userChatDocRef);
+      if (!userChatDocSnap.exists()) {
+        await setDoc(userChatDocRef, { chats: [] });
+      }
+
+      // Check if the current user chat document exists, if not create it
+      const currentUserChatDocSnap = await getDoc(currentUserChatDocRef);
+      if (!currentUserChatDocSnap.exists()) {
+        await setDoc(currentUserChatDocRef, { chats: [] });
+      }
+
+      await updateDoc(userChatDocRef, {
+        chats: arrayUnion({
+          chatId: newChatRef.id,
+          lastMessage: "",
+          receiverId: currentUser.id,
+          updatedAt: Date.now(),
+        }),
+      });
+      await updateDoc(currentUserChatDocRef, {
+        chats: arrayUnion({
+          chatId: newChatRef.id,
+          lastMessage: "",
+          receiverId: userId,
+          updatedAt: Date.now(),
+        }),
+      });
+      console.log(`Chat created with ID: ${newChatRef.id}`);
+      router.push(`/dashboard/chats`);
+      //router.push(`/dashboard/chats/${userName ? userName : "Unknown"}`);
+    } catch (err) {
+      console.error("Failed to add user to chat:", err);
+    }
+  };
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -32,6 +99,7 @@ const Items = () => {
           ...lostItemsSnapshot.docs.map((doc) => ({
             id: doc.id,
             userName,
+            userId: userDoc.id,
             ...doc.data(),
           })),
         ];
@@ -41,6 +109,7 @@ const Items = () => {
           ...foundItemsSnapshot.docs.map((doc) => ({
             id: doc.id,
             userName,
+            userId: userDoc.id,
             ...doc.data(),
           })),
         ];
@@ -100,14 +169,14 @@ const Items = () => {
                   <p className="text-gray-600">{item.mobile}</p>
                   <p className="text-gray-600">
                     Reported by:{" "}
-                    <Link
-                      href={`/dashboard/chats/${
-                        item.userName ? item.userName : "Unknown"
-                      }`}
+                    <button
+                      onClick={() =>
+                        handleAddToChat(item.userId, item.userName)
+                      }
                       className="text-blue-500 hover:underline"
                     >
                       {item.userName ? item.userName : "Unknown"}
-                    </Link>
+                    </button>
                   </p>
 
                   {item.photo && (
@@ -139,20 +208,20 @@ const Items = () => {
                     {item.subject}
                   </h3>
                   <p className="text-gray-600">{item.description}</p>
-                  <p className="text-gray-600"> {item.location}</p>
+                  <p className="text-gray-600">{item.location}</p>
                   <p className="text-gray-600">{item.date}</p>
                   <p className="text-gray-600">{item.mobile}</p>
 
                   <p className="text-gray-600">
                     Reported by:{" "}
-                    <Link
-                      href={`/dashboard/chats/${
-                        item.userName ? item.userName : "Unknown"
-                      }`}
+                    <button
+                      onClick={() =>
+                        handleAddToChat(item.userId, item.userName)
+                      }
                       className="text-blue-500 hover:underline"
                     >
                       {item.userName ? item.userName : "Unknown"}
-                    </Link>
+                    </button>
                   </p>
 
                   {item.photo && (

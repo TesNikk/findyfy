@@ -3,7 +3,6 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/config/firebaseConfig"; // Ensure you have these configured properly
 import { useAuthState } from "react-firebase-hooks/auth";
 
-
 const Profile = () => {
   const [user] = useAuthState(auth); // Get the logged-in user
   const [profileData, setProfileData] = useState({
@@ -45,7 +44,7 @@ const Profile = () => {
     const userRef = doc(db, "users", user.uid);
 
     try {
-      await setDoc(userRef, profileData, { merge: true }); // Save data to Firestore
+      await setDoc(userRef, { ...profileData, id: user.uid }, { merge: true }); // Save data to Firestore
       alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
