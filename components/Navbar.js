@@ -17,8 +17,12 @@ const Navbar = () => {
   const [userSession, setUserSession] = useState(null);
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, (user) => {
-      fetchUserInfo(user?.uid);
-      console.log("User: ", user.uid);
+      if (user) {
+        fetchUserInfo(user.uid);
+        console.log("User: ", user.uid);
+      } else {
+        console.log("No user is signed in.");
+      }
     });
     return () => {
       unSub();
