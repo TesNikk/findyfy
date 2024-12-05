@@ -1,10 +1,10 @@
 import RootLayout from "@/components/wrapper";
-import UpdateItem from "@/components/dashboardComponents/UpdateItem";
+import UserItems from "@/components/dashboardComponents/UserItems";
 export default function UpdatePage() {
   return (
     <RootLayout>
       <div>
-        <UpdateItem />;
+        <UserItems />;
       </div>
     </RootLayout>
   );

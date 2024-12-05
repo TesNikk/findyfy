@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { auth, db } from "@/config/firebaseConfig"; // Ensure Firebase is configured
-import { doc, collection, addDoc } from "firebase/firestore";
+import { doc, collection, addDoc, updateDoc } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 const LostItem = () => {
@@ -66,12 +66,16 @@ const LostItem = () => {
       const lostItemsRef = collection(userRef, "lostItems"); // Subcollection reference
 
       // Add the lost item to the Firestore subcollection
-      await addDoc(lostItemsRef, {
+      const docRef = await addDoc(lostItemsRef, {
         ...lostItem,
         photo: photoURL, // Save Cloudinary URL in Firestore
         timestamp: new Date(), // Add a timestamp for sorting
       });
 
+      await updateDoc(docRef, {
+        id: docRef.id,
+      });
+      console.log("Document written with ID: ", docRef.id);
       alert("Lost item reported successfully!");
       // Clear the form
       setLostItem({

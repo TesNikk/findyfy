@@ -1,7 +1,52 @@
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import React from "react";
+import { db } from "@/config/firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
+import { useUserStore } from "@/store/userStore";
 
 const UserDashboard = () => {
+  const [lostItems, setLostItems] = useState([]);
+  const [foundItems, setFoundItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { currentUser } = useUserStore();
+
+  // Fetch lost and found items
+  useEffect(() => {
+    if (!currentUser?.id) return;
+    const fetchItems = async () => {
+      setLoading(true);
+      try {
+        // Fetch lostItems subcollection
+        const lostSnapshot = await getDocs(
+          collection(db, "users", currentUser.id, "lostItems")
+        );
+        const foundSnapshot = await getDocs(
+          collection(db, "users", currentUser.id, "foundItems")
+        );
+
+        // Map Firestore data to state
+        setLostItems(
+          lostSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+        );
+        setFoundItems(
+          foundSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching items:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItems();
+  }, [currentUser]);
+
   return (
     <div className="bg-red-100 py-10 px-4 min-h-screen">
       <div className="container mx-auto">
@@ -12,9 +57,7 @@ const UserDashboard = () => {
           own Findyfy account and make the best use of it.
         </p>
 
-        {/* Dashboard Content */}
         <div className="flex flex-col lg:flex-row gap-6 h-full">
-          {/* Left Sidebar - Dashboard Menu */}
           <div className="bg-red-200 shadow-lg rounded-lg p-6 lg:w-1/4 h-full flex flex-col">
             <h2 className="text-lg font-semibold mb-4">Dashboard</h2>
             <div className="flex-grow">
@@ -24,7 +67,6 @@ const UserDashboard = () => {
                   <span>➔</span>
                 </button>
               </Link>
-
               <Link href="/dashboard/settings">
                 <button className="mb-3 w-full bg-red-300  p-3  rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
                   <span>Settings</span>
@@ -39,9 +81,9 @@ const UserDashboard = () => {
                 </button>
               </Link>
 
-              <Link href="/dashboard/update">
+              <Link href="/dashboard/reportedItems">
                 <button className="mb-3 w-full bg-red-300 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
-                  <span>Update Items</span>
+                  <span>Reported Items</span>
                   <span>➔</span>
                 </button>
               </Link>
@@ -75,81 +117,78 @@ const UserDashboard = () => {
               </Link>
             </div>
           </div>
-
           {/* Right Content - Lost/Found Items */}
           <div className="bg-red-200 shadow-lg rounded-lg p-6 flex-1 flex flex-col h-full">
-            {/* Lost and Found Items Container */}
-            <div className="flex flex-col justify-between h-full">
-              {/* Lost Items */}
-              <div className="flex flex-col mb-8 h-1/2">
-                <h3 className="text-2xl font-semibold mb-4">
-                  Lost Items Reported
-                </h3>
-                <div className="grid grid-cols-3 gap-4 h-full font-semibold">
-                  <div className="bg-red-300 rounded-lg p-4 flex flex-col items-center hover:bg-red-500 hover:shadow-lg transition-all duration-200">
-                    <img
-                      src="/assets/image/watch.png"
-                      alt="Watch"
-                      className="rounded-md mb-2 object-cover h-48 w-full"
-                    />
-                    <span>Watch</span>
+            {loading ? (
+              <p className="text-center text-lg">Loading...</p>
+            ) : (
+              <div className="flex flex-col justify-between h-full">
+                {/* Lost Items */}
+                <div className="flex flex-col mb-8 h-1/2">
+                  <h3 className="text-2xl font-semibold mb-4">
+                    Lost Items Reported
+                  </h3>
+                  <div className="grid grid-cols-3 gap-4 h-full font-semibold">
+                    {lostItems.map((item) => (
+                      <div
+                        key={item.id}
+                        className="bg-red-300 rounded-lg p-4 flex flex-col items-center hover:bg-red-500 hover:shadow-lg transition-all duration-200"
+                      >
+                        <img
+                          src={item.photo || "/assets/image/placeholder.png"} // Fixed field
+                          alt={item.subject || "Lost Item"}
+                          className="rounded-md mb-2 object-cover h-48 w-full"
+                        />
+                        <span>{item.subject || "Unknown Item"}</span>
+                      </div>
+                    ))}
+                    <Link
+                      href="/lost-item"
+                      className="bg-red-300 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-red-500 hover:shadow-lg transition-all duration-200"
+                    >
+                      <button>
+                        <span className="text-4xl font-bold">+</span>
+                      </button>
+                    </Link>
                   </div>
-                  <div className="bg-red-300 rounded-lg p-4 flex flex-col items-center hover:bg-red-500 hover:shadow-lg transition-all duration-200">
-                    <img
-                      src="/assets/image/wallet.png"
-                      alt="Wallet"
-                      className="rounded-md mb-2 object-cover h-48 w-full"
-                    />
-                    <span>Wallet</span>
-                  </div>
-                  <Link
-                    href="/lost-item"
-                    className="bg-red-300 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-red-500 hover:shadow-lg transition-all duration-200"
-                  >
-                    <button>
-                      <span className="text-4xl font-bold">+</span>
-                    </button>
-                  </Link>
                 </div>
-              </div>
 
-              {/* Found Items */}
-              <div className="flex flex-col mt-4 h-1/2">
-                <h3 className="text-2xl font-semibold mb-4">
-                  Found Items Reported
-                </h3>
-                <div className="grid grid-cols-3 gap-4 h-full font-semibold">
-                  <div className="bg-red-300 rounded-lg p-4 flex flex-col items-center hover:bg-red-500 hover:shadow-lg transition-all duration-200">
-                    <img
-                      src="/assets/image/jewellery.png"
-                      alt="Jewelry"
-                      className="rounded-md mb-2 object-cover h-48 w-full"
-                    />
-                    <span>Jewelry</span>
+                {/* Found Items */}
+                <div className="flex flex-col mt-4 h-1/2">
+                  <h3 className="text-2xl font-semibold mb-4">
+                    Found Items Reported
+                  </h3>
+                  <div className="grid grid-cols-3 gap-4 h-full font-semibold">
+                    {foundItems.map((item) => (
+                      <div
+                        key={item.id}
+                        className="bg-red-300 rounded-lg p-4 flex flex-col items-center hover:bg-red-500 hover:shadow-lg transition-all duration-200"
+                      >
+                        <img
+                          src={item.photo || "/assets/image/placeholder.png"} // Fixed field
+                          alt={item.subject || "Found Item"}
+                          className="rounded-md mb-2 object-cover h-48 w-full"
+                        />
+                        <span>{item.subject || "Unknown Item"}</span>
+                      </div>
+                    ))}
+                    <Link
+                      href="/found-item"
+                      className="bg-red-300 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-red-500 hover:shadow-lg transition-all duration-200"
+                    >
+                      <button>
+                        <span className="text-4xl font-bold">+</span>
+                      </button>
+                    </Link>
                   </div>
-                  <div className="bg-red-300 rounded-lg p-4 flex flex-col items-center hover:bg-red-500 hover:shadow-lg transition-all duration-200">
-                    <img
-                      src="/assets/image/purse.png"
-                      alt="Bag"
-                      className="rounded-md mb-2 object-cover h-48 w-full"
-                    />
-                    <span>Bag</span>
-                  </div>
-                  <Link
-                    href="/found-item"
-                    className="bg-red-300 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-red-500 hover:shadow-lg transition-all duration-200"
-                  >
-                    <button>
-                      <span className="text-4xl font-bold">+</span>
-                    </button>
-                  </Link>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
     </div>
+    
   );
 };
 
