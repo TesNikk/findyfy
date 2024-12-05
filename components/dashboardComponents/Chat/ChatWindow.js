@@ -87,7 +87,11 @@ const ChatWindow = ({ username }) => {
       console.error("Error sending message:", error);
     }
   };
-
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSendMessage();
+    }
+  };
   return (
     <div className="w-full bg-gray-100 p-6 flex flex-col">
       <h2 className="text-lg font-bold mb-4">Chat with {username}</h2>
@@ -150,6 +154,7 @@ const ChatWindow = ({ username }) => {
           placeholder="Type your message..."
           value={messageInput}
           onChange={(e) => setMessageInput(e.target.value)}
+          onKeyDown={handleKeyDown}
           className="w-full p-3 border rounded-md"
         />
         <button
