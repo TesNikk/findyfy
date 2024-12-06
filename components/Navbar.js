@@ -206,11 +206,21 @@ const Navbar = () => {
               Dashboard
             </li>
           </Link>
-          <Link href="/log-in">
-            <li className="p-4 border-b border-gray-600 hover:text-[#00df9a] cursor-pointer">
-              Log in
+          {user ? (
+            <li
+              onClick={handleLogout}
+              className="p-4 border-b border-gray-600 hover:text-[#00df9a] cursor-pointer"
+            >
+              Log out
             </li>
-          </Link>
+          ) : (
+            <Link href="/log-in">
+              <li className="border-b border-gray-600">
+                Log in
+              </li>
+            </Link>
+          )}
+          
           <Link href="/sign-up">
             <li className="p-4 w-[90px] bg-[#00df9a] text-black font-semibold rounded-[25px] hover:bg-[#00c987] transition-all duration-300 cursor-pointer">
               Sign up
