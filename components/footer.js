@@ -104,9 +104,24 @@ const Footer = () => {
           &copy; {new Date().getFullYear()} Findyfy. All Rights Reserved.
         </p>
         <div className="flex justify-start space-x-4 mt-4 md:mt-0 px-24">
-          <FontAwesomeIcon icon={faFacebookF} />
-          <FontAwesomeIcon icon={faXTwitter} />
-          <FontAwesomeIcon icon={faInstagram} />
+          <Link
+            href="https://www.facebook.com/profile.php?id=100007047798697"
+            legacyBehavior
+          >
+            <a target="_blank" rel="noopener noreferrer">
+              <FontAwesomeIcon icon={faFacebookF} />
+            </a>
+          </Link>
+          <Link href="https://x.com/niyaz_nahid" legacyBehavior>
+            <a target="_blank" rel="noopener noreferrer">
+              <FontAwesomeIcon icon={faXTwitter} />
+            </a>
+          </Link>
+          <Link href="https://www.instagram.com/_tesnik/" legacyBehavior>
+            <a target="_blank" rel="noopener noreferrer">
+              <FontAwesomeIcon icon={faInstagram} />
+            </a>
+          </Link>
         </div>
       </div>
     </footer>
