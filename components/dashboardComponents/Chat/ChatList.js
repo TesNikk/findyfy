@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { useUserStore } from "@/store/userStore";
-import { doc, getDoc, onSnapshot, updateDoc, arrayRemove, deleteDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "@/config/firebaseConfig";
 import { useChatStore } from "@/store/chatStore";
 
@@ -64,37 +64,6 @@ const ChatList = () => {
     console.log("chatId and user: ", chatId, user);
   };
 
-  const handleDelete = async (chatId) => {
-    try {
-      // Delete the chat from the user's chat list in Firestore (userChats collection)
-      const userChatsRef = doc(db, "userChats", currentUser.id);
-      const userChatsDoc = await getDoc(userChatsRef);
-  
-      if (userChatsDoc.exists()) {
-        const userChatsData = userChatsDoc.data();
-        const updatedChats = userChatsData.chats.filter(chat => chat.chatId !== chatId);
-  
-        await updateDoc(userChatsRef, {
-          chats: updatedChats
-        });
-  
-        // Optionally, delete the chat document from the 'chats' collection if it exists
-        const chatDocRef = doc(db, "chats", chatId); // Assuming your chats are stored in a separate collection
-        await deleteDoc(chatDocRef);
-  
-        console.log("Chat deleted successfully");
-  
-        // Manually update the state to reflect the change in the UI
-        setChats(prevChats => prevChats.filter(chat => chat.chatId !== chatId));
-      } else {
-        console.error("User chats document does not exist");
-      }
-    } catch (error) {
-      console.error("Error deleting chat: ", error);
-    }
-  };
-  
-
   return (
     <div className="w-1/3 bg-gray-800 text-white p-4">
       <h2 className="text-lg font-bold mb-4">Chats</h2>
@@ -111,7 +80,7 @@ const ChatList = () => {
                 key={index}
                 className="p-2 mb-2 cursor-pointer rounded-lg bg-gray-700 hover:bg-gray-600"
               >
-                <div className="flex justify-between items-center">
+                <div>
                   {/* Username is clickable and updates the chat store */}
                   <Link
                     className="font-bold text-white hover:underline"
@@ -125,34 +94,9 @@ const ChatList = () => {
                   >
                     {chat.username}
                   </Link>
-                  
-                  {/* Delete button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent the link from being triggered
-                      handleDelete(chat.chatId);
-                    }}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
+                  {/* Display the last message */}
+                  <p className="text-sm text-gray-400">{chat.lastMessage}</p>
                 </div>
-
-                {/* Display the last message */}
-                <p className="text-sm text-gray-400">{chat.lastMessage}</p>
               </li>
             ))
           ) : (
