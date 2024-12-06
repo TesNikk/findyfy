@@ -44,7 +44,7 @@ const Profile = () => {
     const userRef = doc(db, "users", user.uid);
 
     try {
-      await setDoc(userRef, profileData, { merge: true }); // Save data to Firestore
+      await setDoc(userRef, { ...profileData, id: user.uid }, { merge: true }); // Save data to Firestore
       alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);

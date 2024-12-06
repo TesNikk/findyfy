@@ -3,6 +3,8 @@ import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "@/config/firebaseConfig";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { db } from "@/config/firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -16,8 +18,11 @@ const SignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(email, password);
+      const res = await createUserWithEmailAndPassword(email, password);
       sessionStorage.setItem("user", true);
+      await setDoc(doc(db, "userChats", res.user.uid), {
+        chats: [],
+      });
     } catch (err) {
       console.error("Sign-Up Error:", err.message);
     }

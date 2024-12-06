@@ -67,12 +67,14 @@ const FoundItem = () => {
       const foundItemsRef = collection(userRef, "foundItems"); // Subcollection for found items
 
       // Add the found item to the Firestore subcollection
-      await addDoc(foundItemsRef, {
+      const docRef = await addDoc(foundItemsRef, {
         ...foundItem,
         photo: photoURL, // Save the Cloudinary image URL
         timestamp: new Date(), // Add a timestamp
       });
-
+      await updateDoc(docRef, {
+        id: docRef.id,
+      });
       alert("Found item reported successfully!");
       // Clear the form
       setFoundItem({

@@ -5,14 +5,29 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/config/firebaseConfig";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { onAuthStateChanged } from "firebase/auth";
+import { useUserStore } from "@/store/userStore";
 
 const Navbar = () => {
+  const { currentUser, isLoading, fetchUserInfo } = useUserStore();
   const currentPath = usePathname();
   const [nav, setNav] = useState(false);
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
   const [userSession, setUserSession] = useState(null);
-
+  useEffect(() => {
+    const unSub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        fetchUserInfo(user.uid);
+        console.log("User: ", user.uid);
+      } else {
+        console.log("No user is signed in.");
+      }
+    });
+    return () => {
+      unSub();
+    };
+  }, [fetchUserInfo]);
   useEffect(() => {
     if (typeof window !== "undefined") {
       const session = sessionStorage.getItem("user");
@@ -41,11 +56,11 @@ const Navbar = () => {
   };
 
   if (loading) {
-    return null; 
+    return null;
   }
 
   if (!user && !userSession) {
-    return null; 
+    return null;
   }
 
   return (
@@ -53,12 +68,16 @@ const Navbar = () => {
       <div className="flex justify-between items-center h-20 max-w-[1340px] mx-auto px-4 text-white">
         {/* Logo and Findyfy Text in Flex */}
         <div className="flex items-center">
-          <img
-            src="/assets/icon/Findyfy-Icon.png"
-            alt="Findyfy Logo"
-            className="h-9 mr-3"
-          />
-          <h1 className="text-3xl font-bold text-[#00df9a]">Findyfy</h1>
+          <Link href="/" legacyBehavior>
+            <a className="flex items-center cursor-pointer">
+              <img
+                src="/assets/icon/Findyfy-Icon.png"
+                alt="Findyfy Logo"
+                className="h-9 mr-3"
+              />
+              <h1 className="text-3xl font-bold text-[#00df9a]">Findyfy</h1>
+            </a>
+          </Link>
         </div>
         {/* Navigation Menu */}
         <ul className="hidden md:flex">
@@ -138,9 +157,11 @@ const Navbar = () => {
               : "ease-in-out duration-500 fixed left-[-100%]"
           }
         >
-          <h1 className="w-full text-3xl font-bold text-[#00df9a] m-4">
-            Findyfy
-          </h1>
+          <Link href="/" legacyBehavior>
+            <a className="w-full text-3xl font-bold text-[#00df9a] m-4 cursor-pointer">
+              Findyfy
+            </a>
+          </Link>
           <Link href="/">
             <li
               className={
