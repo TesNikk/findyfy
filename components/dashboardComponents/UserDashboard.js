@@ -95,7 +95,7 @@ const UserDashboard = () => {
                 </button>
               </Link>
 
-              <Link href="/dashboard/aboutUs">
+              <Link href="/aboutUs">
                 <button className="mb-3 w-full bg-red-300  p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
                   <span>About Us</span>
                   <span>➔</span>

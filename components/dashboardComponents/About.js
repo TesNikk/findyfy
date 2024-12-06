@@ -20,7 +20,7 @@ const About = () => {
               alt="Team Member 1"
               className="rounded-full w-24 h-24 mb-4 object-cover"
             />
-            <h3 className="text-xl font-semibold">Alice Johnson</h3>
+            <h3 className="text-xl font-semibold">Demo person</h3>
             <p className="text-gray-600">Founder & CEO</p>
             <p className="text-center mt-2">
               Alice is passionate about creating technology solutions that make a positive impact on society.
@@ -34,7 +34,7 @@ const About = () => {
               alt="Team Member 2"
               className="rounded-full w-24 h-24 mb-4 object-cover"
             />
-            <h3 className="text-xl font-semibold">Bob Smith</h3>
+            <h3 className="text-xl font-semibold">Demo person</h3>
             <p className="text-gray-600">CTO</p>
             <p className="text-center mt-2">
               Bob leads our tech team with a focus on innovative solutions and efficient software development.
@@ -48,7 +48,7 @@ const About = () => {
               alt="Team Member 3"
               className="rounded-full w-24 h-24 mb-4 object-cover"
             />
-            <h3 className="text-xl font-semibold">Charlie Davis</h3>
+            <h3 className="text-xl font-semibold">Demo person</h3>
             <p className="text-gray-600">Marketing Specialist</p>
             <p className="text-center mt-2">
               Charlie is dedicated to sharing our mission with the world and building a strong community around Findyfy.
