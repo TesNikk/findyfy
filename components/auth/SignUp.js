@@ -23,6 +23,8 @@ const SignUp = () => {
       await setDoc(doc(db, "userChats", res.user.uid), {
         chats: [],
       });
+      const userRef = doc(db, "users", res.user.uid);
+      await setDoc(userRef, {id: res.user.uid }, { merge: true });
     } catch (err) {
       console.error("Sign-Up Error:", err.message);
     }
