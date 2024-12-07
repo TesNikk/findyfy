@@ -16,7 +16,7 @@ const UserItems = () => {
   // Function to delete an item
   const handleDeleteItem = async (collectionName, itemId) => {
     if (!currentUser?.id) return;
-    
+
     try {
       // Add the item ID to the deleting set
       setDeletingIds((prev) => new Set(prev).add(itemId));
@@ -112,9 +112,9 @@ const UserItems = () => {
   }, [searchTerm, lostItems, foundItems]);
 
   return (
-    <div className="w-full py-24 px-4 bg-gray-50">
+    <div className="w-full py-24 px-4 bg-red-50">
       <div className="max-w-[1240px] mx-auto">
-        <h1 className="text-4xl font-bold text-gray-700 mb-8">My Items</h1>
+        <h1 className="text-4xl font-bold text-red-600 mb-8">My Items</h1>
         <input
           type="text"
           placeholder="Search your items..."
@@ -124,12 +124,12 @@ const UserItems = () => {
         />
 
         {loading ? (
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-red-600">Loading...</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Lost Items Section */}
             <div>
-              <h2 className="text-2xl font-bold mb-4 text-green-500">
+              <h2 className="text-2xl font-bold mb-4 text-red-500">
                 Lost Items
               </h2>
               {filteredLostItems.length > 0 ? (
@@ -185,7 +185,7 @@ const UserItems = () => {
 
             {/* Found Items Section */}
             <div>
-              <h2 className="text-2xl font-bold mb-4 text-red-500">
+              <h2 className="text-2xl font-bold mb-4 text-green-500">
                 Found Items
               </h2>
               {filteredFoundItems.length > 0 ? (

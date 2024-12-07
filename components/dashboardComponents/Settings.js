@@ -78,10 +78,12 @@ const Settings = () => {
   );
 
   return (
-    <div className="container mx-auto py-12 px-6 bg-slate-100">
-      <h1 className="text-3xl font-bold mb-6">Settings</h1>
-      <div className="bg-white  shadow-lg rounded-lg p-6">
-        <h2 className="text-xl font-semibold mb-4">Account Settings</h2>
+    <div className="container mx-auto py-12 px-6 bg-red-100">
+      <h1 className="text-3xl font-bold text-red-600 mb-6">Settings</h1>
+      <div className="bg-white shadow-lg rounded-lg p-6">
+        <h2 className="text-xl font-semibold text-red-600 mb-4">
+          Account Settings
+        </h2>
         {renderInput(
           "Current Password",
           currentPassword,
@@ -114,8 +116,8 @@ const Settings = () => {
           onClick={handleSaveChanges}
           className={`px-4 py-2 rounded text-white ${
             isLoading
-              ? "bg-indigo-400 cursor-not-allowed"
-              : "bg-indigo-600 hover:bg-indigo-700"
+              ? "bg-red-400 cursor-not-allowed"
+              : "bg-red-600 hover:bg-red-700"
           }`}
           disabled={isLoading}
         >

@@ -135,8 +135,10 @@ const ChatWindow = ({ username }) => {
   };
 
   return (
-    <div className="w-full bg-gray-100 p-6 flex flex-col">
-      <h2 className="text-lg font-bold mb-4">Chat with {username}</h2>
+    <div className="w-full bg-red-100 p-6 flex flex-col">
+      <h2 className="text-lg font-bold text-red-600 mb-4">
+        Chat with {username}
+      </h2>
 
       {/* Chat Messages */}
       <div className="flex-grow overflow-y-auto bg-white shadow p-4 rounded-lg">
@@ -165,8 +167,8 @@ const ChatWindow = ({ username }) => {
                 <div
                   className={`max-w-xs p-3 rounded-lg shadow ${
                     msg.senderId === currentUser.id
-                      ? "bg-indigo-600 text-white text-right"
-                      : "bg-gray-200 text-left"
+                      ? "bg-red-500 text-white text-right"
+                      : "bg-red-200 text-gray-800 text-left"
                   }`}
                 >
                   {msg.image ? (
@@ -178,13 +180,13 @@ const ChatWindow = ({ username }) => {
                   ) : (
                     <p className="break-words">{msg.message}</p>
                   )}
-                  <p className="text-xs mt-1 text-gray-400">
+                  <p className="text-xs mt-1 text-gray-600">
                     {new Date(msg.timestamp).toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
                     {isLastSeen && (
-                      <span className="text-green-500 ml-2">Seen</span>
+                      <span className="text-gray-200 ml-2">seen</span>
                     )}
                   </p>
                 </div>
@@ -192,7 +194,7 @@ const ChatWindow = ({ username }) => {
             );
           })
         ) : (
-          <p className="text-gray-500">No messages yet.</p>
+          <p className="text-gray-600">No messages yet.</p>
         )}
         <div ref={endRef} />
       </div>
@@ -205,7 +207,7 @@ const ChatWindow = ({ username }) => {
           value={messageInput}
           onChange={(e) => setMessageInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-full p-3 border rounded-md"
+          className="w-full p-3 border border-red-300 rounded-md focus:outline-none focus:border-red-500"
         />
         <input
           type="file"
@@ -216,13 +218,15 @@ const ChatWindow = ({ username }) => {
         />
         <label
           htmlFor="file-input"
-          className="bg-gray-200 p-3 ml-2 rounded-md cursor-pointer hover:bg-gray-300"
+          className="bg-red-200 p-3 ml-2 rounded-md cursor-pointer hover:bg-red-300"
         >
           📎
         </label>
         <button
-          onClick={imageFile ? handleImageSend : () => handleSendMessage(messageInput)}
-          className="bg-indigo-600 text-white p-3 ml-2 rounded-md hover:bg-indigo-500"
+          onClick={
+            imageFile ? handleImageSend : () => handleSendMessage(messageInput)
+          }
+          className="bg-red-500 text-white p-3 ml-2 rounded-md hover:bg-red-600"
         >
           {imageFile ? "Send Image" : "Send"}
         </button>

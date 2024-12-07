@@ -65,12 +65,12 @@ const ChatList = () => {
   };
 
   return (
-    <div className="w-1/3 bg-gray-800 text-white p-4">
-      <h2 className="text-lg font-bold mb-4">Chats</h2>
+    <div className="w-1/3 bg-red-200 text-gray-800 p-4">
+      <h2 className="text-lg font-bold text-red-600 mb-4">Chats</h2>
       {loading ? (
         // Loading indicator
         <div className="flex justify-center items-center h-32">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500"></div>
         </div>
       ) : (
         <ul>
@@ -78,12 +78,12 @@ const ChatList = () => {
             chats.map((chat, index) => (
               <li
                 key={index}
-                className="p-2 mb-2 cursor-pointer rounded-lg bg-gray-700 hover:bg-gray-600"
+                className="p-2 mb-2 cursor-pointer rounded-lg bg-red-50 hover:bg-red-100"
               >
                 <div>
                   {/* Username is clickable and updates the chat store */}
                   <Link
-                    className="font-bold text-white hover:underline"
+                    className="font-bold text-red-700 hover:underline"
                     href={`/dashboard/chats/${chat.username}`}
                     onClick={(e) => {
                       handleSelect(chat.chatId, {
@@ -95,12 +95,12 @@ const ChatList = () => {
                     {chat.username}
                   </Link>
                   {/* Display the last message */}
-                  <p className="text-sm text-gray-400">{chat.lastMessage}</p>
+                  <p className="text-sm text-gray-600">{chat.lastMessage}</p>
                 </div>
               </li>
             ))
           ) : (
-            <p>No chats available</p>
+            <p className="text-gray-600">No chats available</p>
           )}
         </ul>
       )}

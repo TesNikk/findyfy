@@ -137,9 +137,9 @@ const Items = () => {
   }, [searchTerm, lostItems, foundItems]);
 
   return (
-    <div className="w-full py-24 px-4 bg-gray-50">
+    <div className="w-full py-24 px-4 bg-red-50">
       <div className="max-w-[1240px] mx-auto">
-        <h1 className="text-4xl font-bold text-gray-700 mb-8">All Items</h1>
+        <h1 className="text-4xl font-bold text-red-600 mb-8">All Items</h1>
         <input
           type="text"
           placeholder="Search items..."
@@ -151,9 +151,7 @@ const Items = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Lost Items Section */}
           <div>
-            <h2 className="text-2xl font-bold text-gray-700 mb-4">
-              Lost Items
-            </h2>
+            <h2 className="text-2xl font-bold text-red-500 mb-4">Lost Items</h2>
             {filteredLostItems.length > 0 ? (
               filteredLostItems.map((item) => (
                 <div
@@ -195,7 +193,7 @@ const Items = () => {
 
           {/* Found Items Section */}
           <div>
-            <h2 className="text-2xl font-bold text-gray-700 mb-4">
+            <h2 className="text-2xl font-bold text-green-500 mb-4">
               Found Items
             </h2>
             {filteredFoundItems.length > 0 ? (
