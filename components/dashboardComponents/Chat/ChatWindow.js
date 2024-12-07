@@ -20,9 +20,11 @@ const ChatWindow = ({ username }) => {
 
   // Automatically scroll to the end of the chat
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
+    const chatContainer = endRef.current;
+    if (chatContainer) {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
   }, [chat]);
-
   // Listen for updates to the chat document in Firestore
   useEffect(() => {
     if (!chatId) return;
@@ -137,11 +139,15 @@ const ChatWindow = ({ username }) => {
   return (
     <div className="w-full bg-red-100 p-6 flex flex-col">
       <h2 className="text-lg font-bold text-red-600 mb-4">
+        
         Chat with {username}
       </h2>
 
       {/* Chat Messages */}
-      <div className="flex-grow overflow-y-auto bg-white shadow p-4 rounded-lg">
+      <div className="flex-grow overflow-y-auto bg-white shadow p-4 rounded-lg"
+       style={{ maxHeight: "550px" }} // Set a fixed height to make it scrollable
+       ref={endRef} // Apply ref to this container
+      >
         {chat?.messages?.length > 0 ? (
           chat.messages.map((msg, index) => {
             const isLastSeen =
