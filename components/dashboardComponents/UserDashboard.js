@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { db } from "@/config/firebaseConfig";
+import { auth, db } from "@/config/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { useUserStore } from "@/store/userStore";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const UserDashboard = () => {
   const [lostItems, setLostItems] = useState([]);
   const [foundItems, setFoundItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const { currentUser } = useUserStore();
-
+  const [user] = useAuthState(auth);
   // Fetch lost and found items
   useEffect(() => {
     if (!currentUser?.id) return;
@@ -46,7 +47,15 @@ const UserDashboard = () => {
 
     fetchItems();
   }, [currentUser]);
-
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      sessionStorage.removeItem("user");
+      router.push("/log-in");
+    } catch (error) {
+      console.error("Logout Error: ", error.message);
+    }
+  };
   return (
     <div className="bg-red-100 py-10 px-4 min-h-screen">
       <div className="container mx-auto">
@@ -108,13 +117,28 @@ const UserDashboard = () => {
                   <span>➔</span>
                 </button>
               </Link>
-
-              <Link href="/dashboard/logOut">
+              {user ? (
+                <button
+                  onClick={handleLogout}
+                  className="w-full bg-red-300  p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200"
+                >
+                  <span>Log Out</span>
+                  <span>➔</span>
+                </button>
+              ) : (
+                <Link href="/log-in">
+                  <button className="w-full bg-red-300  p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
+                    <span>Log Out</span>
+                    <span>➔</span>
+                  </button>
+                </Link>
+              )}
+              {/* <Link href="/dashboard/logOut">
                 <button className="w-full bg-red-300  p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
                   <span>Log Out</span>
                   <span>➔</span>
                 </button>
-              </Link>
+              </Link> */}
             </div>
           </div>
           {/* Right Content - Lost/Found Items */}
@@ -188,7 +212,6 @@ const UserDashboard = () => {
         </div>
       </div>
     </div>
-    
   );
 };
 
