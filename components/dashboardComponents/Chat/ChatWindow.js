@@ -20,7 +20,10 @@ const ChatWindow = ({ username }) => {
 
   // Automatically scroll to the end of the chat
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
+    const chatContainer = endRef.current;
+    if (chatContainer) {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
   }, [chat]);
 
   // Listen for updates to the chat document in Firestore
@@ -139,7 +142,11 @@ const ChatWindow = ({ username }) => {
       <h2 className="text-lg font-bold mb-4">Chat with {username}</h2>
 
       {/* Chat Messages */}
-      <div className="flex-grow overflow-y-auto bg-white shadow p-4 rounded-lg">
+      <div
+        className="flex-grow overflow-y-auto bg-white shadow p-4 rounded-lg"
+        style={{ maxHeight: "550px" }} // Set a fixed height to make it scrollable
+        ref={endRef} // Apply ref to this container
+      >
         {chat?.messages?.length > 0 ? (
           chat.messages.map((msg, index) => {
             const isLastSeen =
@@ -194,6 +201,7 @@ const ChatWindow = ({ username }) => {
         ) : (
           <p className="text-gray-500">No messages yet.</p>
         )}
+        {/* Hidden div for auto-scrolling */}
         <div ref={endRef} />
       </div>
 
@@ -221,7 +229,9 @@ const ChatWindow = ({ username }) => {
           📎
         </label>
         <button
-          onClick={imageFile ? handleImageSend : () => handleSendMessage(messageInput)}
+          onClick={
+            imageFile ? handleImageSend : () => handleSendMessage(messageInput)
+          }
           className="bg-indigo-600 text-white p-3 ml-2 rounded-md hover:bg-indigo-500"
         >
           {imageFile ? "Send Image" : "Send"}
