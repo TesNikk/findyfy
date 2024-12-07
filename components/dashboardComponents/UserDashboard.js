@@ -1,195 +1,244 @@
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { db } from "@/config/firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import { useChatStore } from "@/store/chatStore";
 import { useUserStore } from "@/store/userStore";
+import {
+  doc,
+  updateDoc,
+  arrayUnion,
+  onSnapshot,
+  getDoc,
+} from "firebase/firestore";
+import React, { useEffect, useState, useRef } from "react";
 
-const UserDashboard = () => {
-  const [lostItems, setLostItems] = useState([]);
-  const [foundItems, setFoundItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+const ChatWindow = ({ username }) => {
+  const [chat, setChat] = useState(null); // For storing chat data
+  const { chatId, user } = useChatStore();
   const { currentUser } = useUserStore();
+  const [messageInput, setMessageInput] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const endRef = useRef(null);
 
-  // Fetch lost and found items
+  // Automatically scroll to the end of the chat
   useEffect(() => {
-    if (!currentUser?.id) return;
-    const fetchItems = async () => {
-      setLoading(true);
-      try {
-        // Fetch lostItems subcollection
-        const lostSnapshot = await getDocs(
-          collection(db, "users", currentUser.id, "lostItems")
-        );
-        const foundSnapshot = await getDocs(
-          collection(db, "users", currentUser.id, "foundItems")
-        );
+    const chatContainer = endRef.current;
+    if (chatContainer) {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+  }, [chat]);
 
-        // Map Firestore data to state
-        setLostItems(
-          lostSnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
+  // Listen for updates to the chat document in Firestore
+  useEffect(() => {
+    if (!chatId) return;
+
+    const chatDoc = doc(db, "chats", chatId);
+    const unSub = onSnapshot(chatDoc, (res) => {
+      const chatData = res.data();
+      setChat(chatData);
+
+      // Mark incoming messages as seen
+      if (chatData?.messages) {
+        const updatedMessages = chatData.messages.map((msg) =>
+          msg.senderId !== currentUser.id && !msg.seen
+            ? { ...msg, seen: true }
+            : msg
         );
-        setFoundItems(
-          foundSnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-        );
-      } catch (error) {
-        console.error("Error fetching items:", error);
-      } finally {
-        setLoading(false);
+        updateDoc(chatDoc, { messages: updatedMessages });
       }
-    };
+    });
 
-    fetchItems();
-  }, [currentUser]);
+    return () => {
+      unSub();
+    };
+  }, [chatId, currentUser.id]);
+
+  // Function to upload the image to Cloudinary
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+    ); // Cloudinary upload preset
+    formData.append(
+      "cloud_name",
+      process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+    ); // Cloudinary cloud name
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+    return data.secure_url; // Secure URL of the uploaded image
+  };
+
+  const handleSendMessage = async (message = null, image = null) => {
+    if ((message?.trim() === "" && !image) || !chatId) return;
+
+    try {
+      await updateDoc(doc(db, "chats", chatId), {
+        messages: arrayUnion({
+          senderId: currentUser.id,
+          message: message || "",
+          image: image || null,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+
+      const userIDs = [currentUser.id, user.id];
+      userIDs.forEach(async (id) => {
+        const userChatsRef = doc(db, "userChats", id);
+        const userChatsSnapshot = await getDoc(userChatsRef);
+        if (userChatsSnapshot.exists()) {
+          const userChatsData = userChatsSnapshot.data();
+          const chatIndex = userChatsData.chats.findIndex(
+            (c) => c.chatId === chatId
+          );
+
+          if (chatIndex !== -1) {
+            userChatsData.chats[chatIndex] = {
+              ...userChatsData.chats[chatIndex],
+              lastMessage: message || "Image",
+              isSeen: id === currentUser.id,
+              updatedAt: new Date().toISOString(),
+            };
+
+            await updateDoc(userChatsRef, {
+              chats: userChatsData.chats,
+            });
+          }
+        }
+
+        setMessageInput("");
+        setImageFile(null);
+      });
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
+  const handleImageSend = async () => {
+    if (!imageFile) return;
+    try {
+      const imageUrl = await uploadToCloudinary(imageFile);
+      handleSendMessage(null, imageUrl);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSendMessage(messageInput);
+    }
+  };
 
   return (
-    <div className="bg-red-100 py-10 px-4 min-h-screen">
-      <div className="container mx-auto">
-        {/* Dashboard Header */}
-        <h1 className="text-4xl font-bold text-center mb-4">User Dashboard</h1>
-        <p className="text-center text-black mb-8">
-          With the use of our easy-to-use dashboard, you can control your very
-          own Findyfy account and make the best use of it.
-        </p>
+    <div className="w-full bg-gray-100 p-6 flex flex-col">
+      <h2 className="text-lg font-bold mb-4">Chat with {username}</h2>
 
-        <div className="flex flex-col lg:flex-row gap-6 h-full">
-          <div className="bg-red-200 shadow-lg rounded-lg p-6 lg:w-1/4 h-full flex flex-col">
-            <h2 className="text-lg font-semibold mb-4">Dashboard</h2>
-            <div className="flex-grow">
-              <Link href="/dashboard/profile">
-                <button className="mb-3 w-full bg-red-300 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
-                  <span>Your Profile</span>
-                  <span>➔</span>
-                </button>
-              </Link>
-              <Link href="/dashboard/settings">
-                <button className="mb-3 w-full bg-red-300  p-3  rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
-                  <span>Settings</span>
-                  <span>➔</span>
-                </button>
-              </Link>
+      {/* Chat Messages */}
+      <div
+        className="flex-grow overflow-y-auto bg-white shadow p-4 rounded-lg"
+        style={{ maxHeight: "550px" }} // Set a fixed height to make it scrollable
+        ref={endRef} // Apply ref to this container
+      >
+        {chat?.messages?.length > 0 ? (
+          chat.messages.map((msg, index) => {
+            const isLastSeen =
+              msg.senderId === currentUser.id &&
+              msg.seen &&
+              index ===
+                chat.messages
+                  .map((m, i) =>
+                    m.senderId === currentUser.id && m.seen ? i : -1
+                  )
+                  .filter((i) => i !== -1)
+                  .pop();
 
-              <Link href="/dashboard/chats">
-                <button className="mb-3 w-full bg-red-300 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
-                  <span>Chats</span>
-                  <span>➔</span>
-                </button>
-              </Link>
-
-              <Link href="/dashboard/reportedItems">
-                <button className="mb-3 w-full bg-red-300 p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
-                  <span>Reported Items</span>
-                  <span>➔</span>
-                </button>
-              </Link>
-
-              <Link href="/dashboard/help">
-                <button className="mb-3 w-full bg-red-300  p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
-                  <span>Help</span>
-                  <span>➔</span>
-                </button>
-              </Link>
-
-              <Link href="/aboutUs">
-                <button className="mb-3 w-full bg-red-300  p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
-                  <span>About Us</span>
-                  <span>➔</span>
-                </button>
-              </Link>
-
-              <Link href="/dashboard/questions">
-                <button className="mb-3 w-full bg-red-300  p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
-                  <span>Questions</span>
-                  <span>➔</span>
-                </button>
-              </Link>
-
-              <Link href="/dashboard/logOut">
-                <button className="w-full bg-red-300  p-3 rounded-lg flex items-center justify-between cursor-pointer hover:bg-red-700 hover:text-red-100 transition-all duration-200">
-                  <span>Log Out</span>
-                  <span>➔</span>
-                </button>
-              </Link>
-            </div>
-          </div>
-          {/* Right Content - Lost/Found Items */}
-          <div className="bg-red-200 shadow-lg rounded-lg p-6 flex-1 flex flex-col h-full">
-            {loading ? (
-              <p className="text-center text-lg">Loading...</p>
-            ) : (
-              <div className="flex flex-col justify-between h-full">
-                {/* Lost Items */}
-                <div className="flex flex-col mb-8 h-1/2">
-                  <h3 className="text-2xl font-semibold mb-4">
-                    Lost Items Reported
-                  </h3>
-                  <div className="grid grid-cols-3 gap-4 h-full font-semibold">
-                    {lostItems.map((item) => (
-                      <div
-                        key={item.id}
-                        className="bg-red-300 rounded-lg p-4 flex flex-col items-center hover:bg-red-500 hover:shadow-lg transition-all duration-200"
-                      >
-                        <img
-                          src={item.photo || "/assets/image/placeholder.png"} // Fixed field
-                          alt={item.subject || "Lost Item"}
-                          className="rounded-md mb-2 object-cover h-48 w-full"
-                        />
-                        <span>{item.subject || "Unknown Item"}</span>
-                      </div>
-                    ))}
-                    <Link
-                      href="/lost-item"
-                      className="bg-red-300 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-red-500 hover:shadow-lg transition-all duration-200"
-                    >
-                      <button>
-                        <span className="text-4xl font-bold">+</span>
-                      </button>
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Found Items */}
-                <div className="flex flex-col mt-4 h-1/2">
-                  <h3 className="text-2xl font-semibold mb-4">
-                    Found Items Reported
-                  </h3>
-                  <div className="grid grid-cols-3 gap-4 h-full font-semibold">
-                    {foundItems.map((item) => (
-                      <div
-                        key={item.id}
-                        className="bg-red-300 rounded-lg p-4 flex flex-col items-center hover:bg-red-500 hover:shadow-lg transition-all duration-200"
-                      >
-                        <img
-                          src={item.photo || "/assets/image/placeholder.png"} // Fixed field
-                          alt={item.subject || "Found Item"}
-                          className="rounded-md mb-2 object-cover h-48 w-full"
-                        />
-                        <span>{item.subject || "Unknown Item"}</span>
-                      </div>
-                    ))}
-                    <Link
-                      href="/found-item"
-                      className="bg-red-300 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-red-500 hover:shadow-lg transition-all duration-200"
-                    >
-                      <button>
-                        <span className="text-4xl font-bold">+</span>
-                      </button>
-                    </Link>
-                  </div>
+            return (
+              <div
+                key={index}
+                className={`mb-4 flex ${
+                  msg.senderId === currentUser.id
+                    ? "justify-end"
+                    : "justify-start"
+                }`}
+              >
+                <div
+                  className={`max-w-xs p-3 rounded-lg shadow ${
+                    msg.senderId === currentUser.id
+                      ? "bg-indigo-600 text-white text-right"
+                      : "bg-gray-200 text-left"
+                  }`}
+                >
+                  {msg.image ? (
+                    <img
+                      src={msg.image}
+                      alt="User sent"
+                      className="max-w-full max-h-60 rounded-lg mb-2"
+                    />
+                  ) : (
+                    <p className="break-words">{msg.message}</p>
+                  )}
+                  <p className="text-xs mt-1 text-gray-400">
+                    {new Date(msg.timestamp).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                    {isLastSeen && (
+                      <span className="text-green-500 ml-2">Seen</span>
+                    )}
+                  </p>
                 </div>
               </div>
-            )}
-          </div>
-        </div>
+            );
+          })
+        ) : (
+          <p className="text-gray-500">No messages yet.</p>
+        )}
+        {/* Hidden div for auto-scrolling */}
+        <div ref={endRef} />
+      </div>
+
+      {/* Message Input */}
+      <div className="mt-4 flex items-center">
+        <input
+          type="text"
+          placeholder="Type your message..."
+          value={messageInput}
+          onChange={(e) => setMessageInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="w-full p-3 border rounded-md"
+        />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImageFile(e.target.files[0])}
+          className="hidden"
+          id="file-input"
+        />
+        <label
+          htmlFor="file-input"
+          className="bg-gray-200 p-3 ml-2 rounded-md cursor-pointer hover:bg-gray-300"
+        >
+          📎
+        </label>
+        <button
+          onClick={
+            imageFile ? handleImageSend : () => handleSendMessage(messageInput)
+          }
+          className="bg-indigo-600 text-white p-3 ml-2 rounded-md hover:bg-indigo-500"
+        >
+          {imageFile ? "Send Image" : "Send"}
+        </button>
       </div>
     </div>
-    
   );
 };
 
-export default UserDashboard;
+export default ChatWindow;
