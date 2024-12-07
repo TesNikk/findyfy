@@ -15,6 +15,7 @@ const ChatWindow = ({ username }) => {
   const { chatId, user } = useChatStore();
   const { currentUser } = useUserStore();
   const [messageInput, setMessageInput] = useState("");
+  const [imageFile, setImageFile] = useState(null);
   const endRef = useRef(null);
 
   // Automatically scroll to the end of the chat
@@ -47,16 +48,44 @@ const ChatWindow = ({ username }) => {
     };
   }, [chatId, currentUser.id]);
 
-  const handleSendMessage = async () => {
-    if (messageInput.trim() === "" || !chatId) return;
+  // Function to upload the image to Cloudinary
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+    ); // Cloudinary upload preset
+    formData.append(
+      "cloud_name",
+      process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+    ); // Cloudinary cloud name
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+    return data.secure_url; // Secure URL of the uploaded image
+  };
+
+  const handleSendMessage = async (message = null, image = null) => {
+    if ((message?.trim() === "" && !image) || !chatId) return;
+
     try {
       await updateDoc(doc(db, "chats", chatId), {
         messages: arrayUnion({
           senderId: currentUser.id,
-          message: messageInput,
+          message: message || "",
+          image: image || null,
           timestamp: new Date().toISOString(),
         }),
       });
+
       const userIDs = [currentUser.id, user.id];
       userIDs.forEach(async (id) => {
         const userChatsRef = doc(db, "userChats", id);
@@ -70,7 +99,7 @@ const ChatWindow = ({ username }) => {
           if (chatIndex !== -1) {
             userChatsData.chats[chatIndex] = {
               ...userChatsData.chats[chatIndex],
-              lastMessage: messageInput,
+              lastMessage: message || "Image",
               isSeen: id === currentUser.id,
               updatedAt: new Date().toISOString(),
             };
@@ -82,16 +111,29 @@ const ChatWindow = ({ username }) => {
         }
 
         setMessageInput("");
+        setImageFile(null);
       });
     } catch (error) {
       console.error("Error sending message:", error);
     }
   };
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      handleSendMessage();
+
+  const handleImageSend = async () => {
+    if (!imageFile) return;
+    try {
+      const imageUrl = await uploadToCloudinary(imageFile);
+      handleSendMessage(null, imageUrl);
+    } catch (error) {
+      console.error("Error uploading image:", error);
     }
   };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSendMessage(messageInput);
+    }
+  };
+
   return (
     <div className="w-full bg-gray-100 p-6 flex flex-col">
       <h2 className="text-lg font-bold mb-4">Chat with {username}</h2>
@@ -127,7 +169,15 @@ const ChatWindow = ({ username }) => {
                       : "bg-gray-200 text-left"
                   }`}
                 >
-                  <p className="break-words">{msg.message}</p>
+                  {msg.image ? (
+                    <img
+                      src={msg.image}
+                      alt="User sent"
+                      className="max-w-full max-h-60 rounded-lg mb-2"
+                    />
+                  ) : (
+                    <p className="break-words">{msg.message}</p>
+                  )}
                   <p className="text-xs mt-1 text-gray-400">
                     {new Date(msg.timestamp).toLocaleTimeString([], {
                       hour: "2-digit",
@@ -148,7 +198,7 @@ const ChatWindow = ({ username }) => {
       </div>
 
       {/* Message Input */}
-      <div className="mt-4 flex">
+      <div className="mt-4 flex items-center">
         <input
           type="text"
           placeholder="Type your message..."
@@ -157,11 +207,24 @@ const ChatWindow = ({ username }) => {
           onKeyDown={handleKeyDown}
           className="w-full p-3 border rounded-md"
         />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImageFile(e.target.files[0])}
+          className="hidden"
+          id="file-input"
+        />
+        <label
+          htmlFor="file-input"
+          className="bg-gray-200 p-3 ml-2 rounded-md cursor-pointer hover:bg-gray-300"
+        >
+          📎
+        </label>
         <button
-          onClick={handleSendMessage}
+          onClick={imageFile ? handleImageSend : () => handleSendMessage(messageInput)}
           className="bg-indigo-600 text-white p-3 ml-2 rounded-md hover:bg-indigo-500"
         >
-          Send
+          {imageFile ? "Send Image" : "Send"}
         </button>
       </div>
     </div>
