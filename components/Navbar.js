@@ -139,9 +139,9 @@ const Navbar = () => {
               </li>
             </Link>
           )}
-          <Link href="/sign-up">
-            <li className="p-4 w-[90px] bg-[#00df9a] text-black font-semibold rounded-[25px] hover:bg-[#00c987] transition-all duration-300 cursor-pointer">
-              Sign up
+          <Link href="/items">
+            <li className="p-4 w-[70px] bg-[#00df9a] text-black font-semibold rounded-[15px] hover:bg-[#00c987] transition-all duration-300 cursor-pointer">
+              Items
             </li>
           </Link>
         </ul>
@@ -215,15 +215,13 @@ const Navbar = () => {
             </li>
           ) : (
             <Link href="/log-in">
-              <li className="border-b border-gray-600">
-                Log in
-              </li>
+              <li className="border-b border-gray-600">Log in</li>
             </Link>
           )}
-          
-          <Link href="/sign-up">
-            <li className="p-4 w-[90px] bg-[#00df9a] text-black font-semibold rounded-[25px] hover:bg-[#00c987] transition-all duration-300 cursor-pointer">
-              Sign up
+
+          <Link href="/items.js">
+            <li className="p-4 w-[70px] bg-[#00df9a] text-black font-semibold rounded-[15px] hover:bg-[#00c987] transition-all duration-300 cursor-pointer">
+              Items
             </li>
           </Link>
         </ul>
