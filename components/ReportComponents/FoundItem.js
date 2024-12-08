@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { auth, db } from "@/config/firebaseConfig"; // Firebase configuration file
-import { doc, collection, addDoc } from "firebase/firestore";
+import { doc, collection, addDoc,updateDoc } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 const FoundItem = () => {
